@@ -5,7 +5,7 @@ services:
       - "3388:3000"
     environment:
       DATABASE_URL: postgres://guitar:guitar@db:5432/guitarshop
-      PORT: 3000
+      PORT: 3388
     depends_on:
       db:
         condition: service_healthy
