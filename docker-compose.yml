@@ -2,7 +2,7 @@ services:
   app:
     build: .
     ports:
-      - "3000:3000"
+      - "3388:3000"
     environment:
       DATABASE_URL: postgres://guitar:guitar@db:5432/guitarshop
       PORT: 3000
