@@ -3,35 +3,56 @@ pipeline {
 
     environment {
         IMAGE_NAME = 'string-theory-guitars'
+        IMAGE_TAG = "${BUILD_NUMBER}"
     }
 
     stages {
 
         stage('Install') {
             steps {
-                sh 'npm install'
+                script {
+                    if (isUnix()) {
+                        sh 'npm install'
+                    } else {
+                        bat 'npm install'
+                    }
+                }
             }
         }
 
         stage('Test') {
             steps {
-                sh 'npm test'
+                script {
+                    if (isUnix()) {
+                        sh 'npm test'
+                    } else {
+                        bat 'npm test'
+                    }
+                }
             }
         }
 
         stage('Build image') {
             steps {
-                sh 'docker build -t $IMAGE_NAME:$BUILD_NUMBER .'
+                script {
+                    if (isUnix()) {
+                        sh 'docker build -t $IMAGE_NAME:$IMAGE_TAG .'
+                    } else {
+                        bat 'docker build -t %IMAGE_NAME%:%IMAGE_TAG% .'
+                    }
+                }
             }
         }
 
         stage('Deploy') {
-            when {
-                branch 'main'
-            }
-
             steps {
-                sh 'docker compose up -d --build'
+                script {
+                    if (isUnix()) {
+                        sh 'docker compose up -d --build --remove-orphans'
+                    } else {
+                        bat 'docker compose up -d --build --remove-orphans'
+                    }
+                }
             }
         }
     }
